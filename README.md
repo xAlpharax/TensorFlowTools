@@ -1,6 +1,6 @@
 # TensorFlowTools
 
-Tools that enable the use of shortcuts while experimenting and implementing ML Research Papers. Just code I want to save and use later on.
+Tools that enable the use of shortcuts while experimenting and implementing ML Research Papers in code, but also useful to mess around. Just code I want to save and use later on, nothing too crazy.
 
 ## Installation
 
