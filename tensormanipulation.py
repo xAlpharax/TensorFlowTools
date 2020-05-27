@@ -3,32 +3,33 @@ import numpy as np
 
 #STUFF
 
-# #batch_size = 3
-# #seq_len = 5
-# #dim = 2
-
-# # [batch_size x seq_len x dim]  -- hidden states
-# Y = tf.constant(np.random.randn(batch_size, seq_len, dim), tf.float32)
-# # [batch_size x dim]            -- h_N
-# h = tf.constant(np.random.randn(batch_size, dim), tf.float32)
-
-# initializer = tf.random_uniform_initializer()
-# W = tf.get_variable("weights_Y", [dim, dim], initializer=initializer)
-# w = tf.get_variable("weights_w", [dim], initializer=initializer)
-
-# # [batch_size x seq_len x dim]  -- tanh(W^{Y}Y)
-# M = tf.tanh(tf.einsum("aij,jk->aik", Y, W))
-# # [batch_size x seq_len]        -- softmax(Y w^T)
-# a = tf.nn.softmax(tf.einsum("aij,j->ai", M, w))
-# # [batch_size x dim]            -- Ya^T
-# r = tf.einsum("aij,ai->aj", Y, a)
-
-# with tf.Session() as sess:
-#     sess.run(tf.global_variables_initializer())
-#     a_val, r_val = sess.run([a, r])
-#     print("a:", a_val, "\nr:", r_val)
+def normalization(p):
+    """
+    :param p: list of values
+    :return: return min-max normalization
+    """
+    r = []
+    min_v = min(p)
+    max_v = max(p)
+    for i in p:
+        r.append((i-min_v)/(max_v - min_v))
+    return r
 
 #VECTORS
+
+def cosine_similarity(p, q):
+    """
+    :param p: document vector, eg = [1,2, 1, 0.6]
+    :param q: query vector, eg = [0.4, 1, 0]
+    :return:
+    """
+    n = len(p)
+    assert n == len(q)
+    dot = sum([a*b for a, b in zip(p, q)])
+    x = tf.sqrt(sum([pow(i, 2) for i in p]))
+    y = tf.sqrt(sum([pow(i, 2) for i in q]))
+
+    return dot / (x*y)
 
 def cos_sim(v1, v2):
     norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1), axis=1))
@@ -41,7 +42,7 @@ def euclidean_score(v1, v2):
     euclidean = tf.sqrt(tf.reduce_sum(tf.square(v1 - v2), axis=1))
     return 1 / (1 + euclidean)
 
-#MATRIX
+#MATRIX OPERATIONS
 
 def add(matrix_a, matrix_b):
     if _check_not_integer(matrix_a) and _check_not_integer(matrix_b):
