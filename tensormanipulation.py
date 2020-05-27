@@ -15,6 +15,11 @@ def normalization(p):
         r.append((i-min_v)/(max_v - min_v))
     return r
 
+def ecludian_distance(p, q):
+    n = len(p)
+    assert n == len(q)
+    return tf.sqrt(sum([pow(p[i] - q[i], 2) for i in range(n)]))
+
 #VECTORS
 
 def cosine_similarity(p, q):
