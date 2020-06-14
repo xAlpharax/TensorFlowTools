@@ -130,6 +130,14 @@ def deconv2d(layer_input, filters, skip_input=None, f_size=5, dropout_rate=0): #
 		u = Concatenate()([u, skip_input])
 	return u
 
+def disconv2d(layer_input, filters, f_size=5, normalization=True):
+    """Discriminator layer"""
+    d = Conv2D(filters, kernel_size=f_size, strides=2, padding='same')(layer_input)
+    d = LeakyReLU(alpha=0.3)(d)
+    if normalization:
+        d = InstanceNormalization()(d)
+    return d
+
 #######################################################################################
 
 if __name__ == '__main__':
@@ -137,6 +145,7 @@ if __name__ == '__main__':
 	# testprevconcat = np.ones((1,64,64,16))
 
 	# testarray = deconv2d(testarray, 16, skip_input=testprevconcat)
+    # testarray = disconv2d(testarray, 16)
 
 	testarray = conv2d(testarray, 16)
 	print(testarray.shape)
