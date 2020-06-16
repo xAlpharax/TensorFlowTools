@@ -1,4 +1,7 @@
 import tensorflow as tf
+import numpy as np
+
+#######################################################################################
 
 def scaled_dot_product_attention(q, k, v, mask):
   """Calculate the attention weights.
@@ -35,3 +38,31 @@ def scaled_dot_product_attention(q, k, v, mask):
   output = tf.matmul(attention_weights, v)  # (..., seq_len_q, depth_v)
 
   return output, attention_weights
+
+#######################################################################################
+
+def print_out(q, k, v):
+  temp_out, temp_attn = scaled_dot_product_attention(q, k, v, None)
+  print ('Attention weights are:')
+  print (temp_attn)
+  print ('Output is:')
+  print (temp_out)
+
+#######################################################################################
+
+np.set_printoptions(suppress=True)
+
+temp_k = tf.constant([[10,0,0],
+                      [0,10,0],
+                      [0,0,10],
+                      [0,0,10]], dtype=tf.float32)  # (4, 3)
+
+temp_v = tf.constant([[   1,0],
+                      [  10,0],
+                      [ 100,5],
+                      [1000,6]], dtype=tf.float32)  # (4, 2)
+
+# This `query` aligns with the second `key`,
+# so the second `value` is returned.
+temp_q = tf.constant([[0, 10, 0]], dtype=tf.float32)  # (1, 3)
+print_out(temp_q, temp_k, temp_v)
