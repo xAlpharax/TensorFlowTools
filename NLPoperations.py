@@ -95,13 +95,15 @@ class MultiHeadAttention(tf.keras.layers.Layer):
     return output, attention_weights
 
 #######################################################################################
+#                                   Test DP Attention                                 #
+#######################################################################################
 
 def print_out(q, k, v):
   temp_out, temp_attn = scaled_dot_product_attention(q, k, v, None)
-  print ('Attention weights are:')
-  print (temp_attn)
-  print ('Output is:')
-  print (temp_out)
+  print('Attention weights are:')
+  print(temp_attn)
+  print('Output is:')
+  print(temp_out)
 
 #######################################################################################
 
@@ -123,3 +125,11 @@ temp_q = tf.constant([[0, 10, 0]], dtype=tf.float32)  # (1, 3)
 print_out(temp_q, temp_k, temp_v)
 
 #######################################################################################
+#                               Test Multi-Head Attention                             #
+#######################################################################################
+
+temp_mha = MultiHeadAttention(d_model=512, num_heads=8)
+y = tf.random.uniform((1, 60, 512))  # (batch_size, encoder_sequence, d_model)
+out, attn = temp_mha(y, k=y, q=y, mask=None)
+print(out.shape)
+print(attn.shape)
