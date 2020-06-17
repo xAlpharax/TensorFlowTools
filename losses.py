@@ -37,7 +37,8 @@ if __name__ == '__main__':
 
     y = np.array([[0,1]])
     pred = np.array([[0.1, 0.7]])
-    
+
+    #print(categorical_crossentropy(y,pred))
     print(binary_crossentropy(y,pred))
 
 #######################################################################################
