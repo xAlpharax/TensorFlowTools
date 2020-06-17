@@ -34,7 +34,10 @@ def sparse_categorical_crossentropy(y_true, y_pred, from_logits=False, axis=-1):
 #######################################################################################
 
 if __name__ == '__main__':
-    
+
     y = np.array([[0,1]])
     pred = np.array([[0.1, 0.7]])
+    
     print(binary_crossentropy(y,pred))
+
+#######################################################################################
