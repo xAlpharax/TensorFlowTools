@@ -15,6 +15,10 @@ def normalization(p):
         r.append((i-min_v)/(max_v - min_v))
     return r
 
+def softmax(x, axis=-1):
+    ex = tf.keras.backend.exp(x - tf.keras.backend.max(x, axis=axis, keepdims=True))
+    return ex/tf.keras.backend.sum(ex, axis=axis, keepdims=True)
+
 def ecludian_distance(p, q):
     n = len(p)
     assert n == len(q)
