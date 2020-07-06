@@ -5,7 +5,11 @@ Tools that enable the use of shortcuts while experimenting and implementing ML R
 ## Installation
 
 ```bash
-pip3 install -r requirements.txt
+#cloning the repo
+git clone https://github.com/xAlpharax/TensorFlowTools
+
+#install dependencies
+pip3 install -qq -r requirements.txt
 ```
 
 ## Usage
