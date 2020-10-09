@@ -1,6 +1,7 @@
 from keras.layers import GlobalAveragePooling2D, Reshape, Dense, multiply, add, Permute, Conv2D
 from keras import backend as K
 
+#################################################################
 
 def squeeze_excite_block(input, ratio=16):
     ''' Create a channel-wise squeeze-excite block
@@ -25,8 +26,10 @@ def squeeze_excite_block(input, ratio=16):
         se = Permute((3, 1, 2))(se)
 
     x = multiply([init, se])
+    
     return x
 
+#################################################################
 
 def spatial_squeeze_excite_block(input):
     ''' Create a spatial squeeze-excite block
@@ -43,6 +46,7 @@ def spatial_squeeze_excite_block(input):
     x = multiply([input, se])
     return x
 
+#################################################################
 
 def channel_spatial_squeeze_excite(input, ratio=16):
     ''' Create a spatial squeeze-excite block

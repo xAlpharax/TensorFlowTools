@@ -9,19 +9,9 @@ K.set_floatx('float64')
 
 class InstanceNormalization(Layer):
 
-    def __init__(self,
-                 axis=None,
-                 epsilon=1e-3,
-                 center=True,
-                 scale=True,
-                 beta_initializer='zeros',
-                 gamma_initializer='ones',
-                 beta_regularizer=None,
-                 gamma_regularizer=None,
-                 beta_constraint=None,
-                 gamma_constraint=None,
-                 **kwargs):
-        super(InstanceNormalization, self).__init__(**kwargs)
+    def __init__(self,axis=None,epsilon=1e-3,center=True,scale=True,beta_initializer='zeros',gamma_initializer='ones',
+                 beta_regularizer=None,gamma_regularizer=None,beta_constraint=None,gamma_constraint=None, **kwargs):
+
         self.supports_masking = True
         self.axis = axis
         self.epsilon = epsilon
@@ -33,6 +23,7 @@ class InstanceNormalization(Layer):
         self.gamma_regularizer = regularizers.get(gamma_regularizer)
         self.beta_constraint = constraints.get(beta_constraint)
         self.gamma_constraint = constraints.get(gamma_constraint)
+        super(InstanceNormalization, self).__init__(**kwargs)
 
     def build(self, input_shape):
         ndim = len(input_shape)
@@ -81,15 +72,18 @@ class InstanceNormalization(Layer):
         normed = (inputs - mean) / stddev
 
         broadcast_shape = [1] * len(input_shape)
+
         if self.axis is not None:
             broadcast_shape[self.axis] = input_shape[self.axis]
 
         if self.scale:
             broadcast_gamma = K.reshape(self.gamma, broadcast_shape)
             normed = normed * broadcast_gamma
+
         if self.center:
             broadcast_beta = K.reshape(self.beta, broadcast_shape)
             normed = normed + broadcast_beta
+
         return normed
 
     def get_config(self):

@@ -13,7 +13,23 @@ def normalization(p):
     max_v = max(p)
     for i in p:
         r.append((i-min_v)/(max_v - min_v))
+
     return r
+
+def one_hot_encode(x, num=10):
+    """
+        argument
+            - x: a list of labels
+            - num: number of classes (length of the encoded vector)
+        return
+            - one hot encoding matrix (number of labels, number of class)
+    """
+    encoded = np.zeros((len(x), num))
+
+    for idx, val in enumerate(x):
+        encoded[idx][val] = 1
+
+    return encoded
 
 def softmax(x, axis=-1):
     ex = tf.keras.backend.exp(x - tf.keras.backend.max(x, axis=axis, keepdims=True))
@@ -63,6 +79,7 @@ def add(matrix_a, matrix_b):
                 val = matrix_a[i][j] + matrix_b[i][j]
                 list_1.append(val)
             matrix_c.append(list_1)
+
         return matrix_c
 
 def subtract(matrix_a, matrix_b):
@@ -75,6 +92,7 @@ def subtract(matrix_a, matrix_b):
                 val = matrix_a[i][j] - matrix_b[i][j]
                 list_1.append(val)
             matrix_c.append(list_1)
+
         return matrix_c
 
 def scalar_multiply(matrix, n):
@@ -86,10 +104,8 @@ def multiply(matrix_a, matrix_b):
         rows, cols = _verify_matrix_sizes(matrix_a, matrix_b)
 
         if cols[0] != rows[1]:
-            raise ValueError(
-                f"Cannot multiply matrix of dimensions ({rows[0]},{cols[0]}) "
-                f"and ({rows[1]},{cols[1]})"
-            )
+            raise ValueError(f"Cannot multiply matrix of dimensions ({rows[0]},{cols[0]}) "
+                             f"and ({rows[1]},{cols[1]})")
         for i in range(rows[0]):
             list_1 = []
             for j in range(cols[1]):
@@ -98,6 +114,7 @@ def multiply(matrix_a, matrix_b):
                     val = val + matrix_a[i][k] * matrix_b[k][j]
                 list_1.append(val)
             matrix_c.append(list_1)
+
         return matrix_c
 
 def identity(n):
@@ -132,6 +149,7 @@ def determinant(matrix):
     res = 0
     for x in range(len(matrix)):
         res += matrix[0][x] * determinant(minor(matrix, 0, x)) * (-1) ** x
+        
     return res
 
 def inverse(matrix):
@@ -146,7 +164,17 @@ def inverse(matrix):
 
     cofactors = [[x * (-1) ** (row + col) for col, x in enumerate(matrix_minor[row])] for row in range(len(matrix))]
     adjugate = transpose(cofactors)
+
     return scalar_multiply(adjugate, 1 / det)
+
+#ADVANCED OPERATIONS
+
+def make_attention_mat(x1, x2):
+    # x1, x2 = [batch, height, width, 1] = [batch, d, s, 1]
+    # x2 => [batch, height, 1, width]
+    # [batch, width, wdith] = [batch, s, s]
+    euclidean = tf.sqrt(tf.reduce_sum(tf.square(x1 - tf.matrix_transpose(x2)), axis=1))
+    return 1 / (1 + euclidean)
 
 #MATRIX UTILS
 
@@ -165,17 +193,6 @@ def _verify_matrix_sizes(matrix_a, matrix_b):
     shape = _shape(matrix_a)
     shape += _shape(matrix_b)
     if shape[0] != shape[2] or shape[1] != shape[3]:
-        raise ValueError(
-            f"operands could not be broadcast together with shape "
-            f"({shape[0], shape[1]}), ({shape[2], shape[3]})"
-        )
+        raise ValueError(f"operands could not be broadcast together with shape "
+                         f"({shape[0], shape[1]}), ({shape[2], shape[3]})")
     return [shape[0], shape[2]], [shape[1], shape[3]]
-
-#ADVANCED OPERATIONS
-
-def make_attention_mat(x1, x2):
-    # x1, x2 = [batch, height, width, 1] = [batch, d, s, 1]
-    # x2 => [batch, height, 1, width]
-    # [batch, width, wdith] = [batch, s, s]
-    euclidean = tf.sqrt(tf.reduce_sum(tf.square(x1 - tf.matrix_transpose(x2)), axis=1))
-    return 1 / (1 + euclidean)
